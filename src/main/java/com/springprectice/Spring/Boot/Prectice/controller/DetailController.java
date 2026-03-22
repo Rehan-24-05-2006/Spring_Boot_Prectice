@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("user/details")
@@ -14,15 +16,20 @@ public class DetailController {
 
     private final DetailService detailService;
 
-    @PostMapping("/add")
-    public ResponseEntity<Details> addInfo(@RequestBody Details info) {
+    //Get Add Details show of particular User
+    @GetMapping("/allinfo/{userId}")
+    public ResponseEntity<List<Details>> getAllDetailByUser(@PathVariable String userId) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(detailService.addContent(info));
+                .body(detailService.getAllDetails(userId));
     }
 
-    @DeleteMapping("/delete/{contentid}")
-    public ResponseEntity<String> removeInfo(@PathVariable String contentid) {
+//    // Information Add By User ID
+    @PostMapping("/add/{id}")
+    public ResponseEntity<Details> addInfo(
+            @PathVariable String id,
+            @RequestBody Details info) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(detailService.removeContent(contentid));
+                .body(detailService.addContent(id, info));
     }
+
 }

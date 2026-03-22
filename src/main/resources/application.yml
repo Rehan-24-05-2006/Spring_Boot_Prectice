@@ -5,5 +5,7 @@ Spring:
       post: 27017
       database: example
 
+      auto-index-creation: true
+
 Server:
   Port: 8080

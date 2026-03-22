@@ -5,11 +5,11 @@ import com.springprectice.Spring.Boot.Prectice.repository.UserRepository;
 import com.springprectice.Spring.Boot.Prectice.users.Details;
 import com.springprectice.Spring.Boot.Prectice.users.User;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -28,31 +28,33 @@ public class UserService {
     }
 
 
-    // Login User
+//     Login User
     public List<Details> loginUser(@RequestBody User user) {
-
         User existUser = userRepository.findByEmail(user.getEmail());
-
         if (existUser != null &&
                 existUser.getPassword().equals(user.getPassword())) {
-
-            List<Details> allByUserId =  detailRepository.findAllByUserId(existUser.getId());
-            return allByUserId;
+            List<Details> list = existUser.getDetails();
+            list.stream().forEach(System.out::println);
+            return null;
         }
         throw new RuntimeException("User Not Found");
     }
 
+    public List<Details> findByUserId(String userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new RuntimeException("USER NOT EXIST, pleas find another USER!");
+        }
+        return user.getDetails();
+    }
 
-//    Map<String, User> map = new HashMap<>();
-//
-//    public User showUsers() {
-//        return new User("Rehan", "3271", "rehan@gmail.com");
-//    }
-//
-//    public User addUSer(User user) {
-//        map.put(user.getId(), user);
-//        return new User();
-//    }
-
-
+    public Details addContent(String id, Details info) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            user.getDetails().add(detailRepository.save(info));
+            userRepository.save(user);
+            return info;
+        }
+        throw new RuntimeException("Not Added Your Content");
+    }
 }

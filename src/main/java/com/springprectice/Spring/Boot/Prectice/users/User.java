@@ -1,22 +1,33 @@
 package com.springprectice.Spring.Boot.Prectice.users;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 @Data
-@RequiredArgsConstructor
-@AllArgsConstructor
 @Document(collection = "userData")
 public class User {
 
     @Id
     private String id;
 
+    @NotNull
     private String name;
+
+    @Indexed(unique = true)
+    @NotNull
     private String email;
 
+    @NotNull
     private String password;
+
+    @DBRef
+    private List<Details> details = new ArrayList<>();
 }

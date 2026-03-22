@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface DetailRepository extends MongoRepository<Details, String> {
-    List<Details> findAllByUserId(String userId);
 }
