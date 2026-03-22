@@ -1,2 +1,9 @@
+Spring:
+  data:
+    mongodb:
+      host: localhost
+      post: 27017
+      database: example
+
 Server:
   Port: 8080
