@@ -23,7 +23,7 @@ public class DetailController {
                 .body(detailService.getAllDetails(userId));
     }
 
-//    // Information Add By User ID
+   // Information Add By User ID
     @PostMapping("/add/{id}")
     public ResponseEntity<Details> addInfo(
             @PathVariable String id,
@@ -32,4 +32,23 @@ public class DetailController {
                 .body(detailService.addContent(id, info));
     }
 
+    // Delete Details
+    @DeleteMapping("/remove/{userId}/{cId}")
+    public ResponseEntity<List<Details>> removeDelail(
+            @PathVariable String userId,
+            @PathVariable String cId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(detailService.removeContent(userId, cId));
+    }
+
+    // UPDATE CONTENT
+    @PutMapping("/update/{cId}")
+    public ResponseEntity<Details> updateDetail(
+            @PathVariable String cId,
+            @RequestBody Details info
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(detailService.updateContent(cId, info));
+    }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rehan")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -28,39 +28,4 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.loginUser(user));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//    @GetMapping("/view")
-//    public ResponseEntity<User> getUser() {
-//        return ResponseEntity.ok(userService.showUsers());
-//    }
-//
-//    @PostMapping("/add")
-//    public ResponseEntity<User> setUser(@RequestBody User user) {
-//        return ResponseEntity.ok(userService.addUSer(user));
-//    }
-//
-//    @GetMapping("/allusers")
-//    public ResponseEntity<UserService> allUsers() {
-//        return new ResponseEntity<>(userService, HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/info")
-//    public String getInfo(@RequestHeader("User-Agent") String userAgent) {
-//        return "User Agent : " + userAgent;
-//    }
-
 }

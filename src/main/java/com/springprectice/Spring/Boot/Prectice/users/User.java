@@ -19,7 +19,8 @@ public class User {
     private String id;
 
     @NotNull
-    private String name;
+    @Indexed(unique = true)
+    private String userName;
 
     @Indexed(unique = true)
     @NotNull
@@ -30,4 +31,6 @@ public class User {
 
     @DBRef
     private List<Details> details = new ArrayList<>();
+
+    private List<String> roles;
 }

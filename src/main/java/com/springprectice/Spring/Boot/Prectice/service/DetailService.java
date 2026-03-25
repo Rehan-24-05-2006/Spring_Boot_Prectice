@@ -1,13 +1,12 @@
 package com.springprectice.Spring.Boot.Prectice.service;
 
 import com.springprectice.Spring.Boot.Prectice.repository.DetailRepository;
-import com.springprectice.Spring.Boot.Prectice.repository.UserRepository;
 import com.springprectice.Spring.Boot.Prectice.users.Details;
-import com.springprectice.Spring.Boot.Prectice.users.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,4 +25,11 @@ public class DetailService {
         return userService.addContent(id, info);
     }
 
+    public List<Details> removeContent(String userId, String cId) {
+        return userService.removeContent(userId, cId);
+    }
+
+    public Details updateContent(String cId, Details info) {
+        return userService.updateContent(cId, info);
+    }
 }
