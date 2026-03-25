@@ -19,7 +19,6 @@ public class User {
     private String id;
 
     @NotNull
-    @Indexed(unique = true)
     private String userName;
 
     @Indexed(unique = true)
