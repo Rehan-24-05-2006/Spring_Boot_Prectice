@@ -21,8 +21,9 @@ public class User {
     @NotNull
     private String userName;
 
-    @Indexed(unique = true)
+
     @NotNull
+    @Indexed(unique = true)
     private String email;
 
     @NotNull

@@ -1,15 +1,23 @@
 package com.springprectice.Spring.Boot.Prectice.service;
 
+import com.springprectice.Spring.Boot.Prectice.dto.UserUpdateDTO;
 import com.springprectice.Spring.Boot.Prectice.repository.DetailRepository;
 import com.springprectice.Spring.Boot.Prectice.repository.UserRepository;
 import com.springprectice.Spring.Boot.Prectice.users.Details;
 import com.springprectice.Spring.Boot.Prectice.users.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.SequencedCollection;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -18,11 +26,19 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final DetailRepository detailRepository;
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public User authenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email1 = authentication.getName();
+        return userRepository.findByEmail(email1);
+    }
 
     // Register User
-    @Transactional
+//    @Transactional
     public User addUser(User user) {
-
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(List.of("USER"));
         Boolean res = userRepository.existsByEmail(user.getEmail());
         if (res)
             throw new RuntimeException("User All Ready Exist, Please Enter Another User/Email");
@@ -30,7 +46,7 @@ public class UserService {
     }
 
 
-//     Login User
+    //     Login User
     public List<Details> loginUser(@RequestBody User user) {
         User existUser = userRepository.findByEmail(user.getEmail());
         if (existUser != null &&
@@ -41,34 +57,29 @@ public class UserService {
     }
 
     // Get All Details By User
-    public List<Details> findByUserId(String userId) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            throw new RuntimeException("USER NOT EXIST, pleas find another USER!");
-        }
+    public List<Details> findByUserId() {
+        User user = authenticatedUser();
         return user.getDetails();
     }
 
     // Add Content User ID
-    public Details addContent(String id, Details info) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            user.getDetails().add(detailRepository.save(info));
-            userRepository.save(user);
-            return info;
-        }
-        throw new RuntimeException("Not Added Your Content");
+    public Details addContent(Details info) {
+        User user = authenticatedUser();
+        user.getDetails().add(detailRepository.save(info));
+        userRepository.save(user);
+        return info;
     }
 
-    public List<Details> removeContent(String userId, String cId) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user != null) {
+    public List<Details> removeContent(String cId) {
+        User user = authenticatedUser();
+        List<Details> list = user.getDetails().stream().filter(x -> x.equals(cId)).toList();
+        if (!list.isEmpty()) {
             user.getDetails().removeIf(x -> x.getId().equals(cId));
             userRepository.save(user);
             detailRepository.deleteById(cId);
             return user.getDetails();
         }
-        throw new RuntimeException("NOT DELETE CONTENT, please enter another user");
+        throw new RuntimeException("User Not found");
     }
 
     public Details updateContent(String id, Details info) {
@@ -80,4 +91,18 @@ public class UserService {
         }
         throw new RuntimeException("NOT DELETE CONTENT, please enter another user");
     }
+
+    public User updateUser(UserUpdateDTO user) {
+        User userInDb = authenticatedUser();
+        userInDb.setUserName(user.getUserName() != null && !user.getPassword().equals("") ? user.getUserName() : userInDb.getUserName());
+        userInDb.setPassword(user.getPassword() != null && !user.getPassword().equals("") ? passwordEncoder.encode(user.getPassword()) : userInDb.getPassword());
+        userRepository.save(userInDb);
+        return userInDb;
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }
+
+

@@ -9,3 +9,5 @@ Spring:
 
 Server:
   Port: 8080
+  Servlet:
+    context-path: /rk

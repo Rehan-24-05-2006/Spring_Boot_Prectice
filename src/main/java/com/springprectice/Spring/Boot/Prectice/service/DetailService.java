@@ -3,6 +3,7 @@ package com.springprectice.Spring.Boot.Prectice.service;
 import com.springprectice.Spring.Boot.Prectice.repository.DetailRepository;
 import com.springprectice.Spring.Boot.Prectice.users.Details;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,17 +16,17 @@ public class DetailService {
     private final UserService userService;
 
 
-    public List<Details> getAllDetails(String userId) {
-        return userService.findByUserId(userId);
+    public List<Details> getAllDetails() {
+        return userService.findByUserId();
     }
 
 
-    public Details addContent(String id, Details info) {
-        return userService.addContent(id, info);
+    public Details addContent(Details info) {
+        return userService.addContent(info);
     }
 
-    public List<Details> removeContent(String userId, String cId) {
-        return userService.removeContent(userId, cId);
+    public List<Details> removeContent(String cId) {
+        return userService.removeContent(cId);
     }
 
     public Details updateContent(String cId, Details info) {

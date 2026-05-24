@@ -17,29 +17,26 @@ public class DetailController {
     private final DetailService detailService;
 
     //Get Add Details show of particular User
-    @GetMapping("/allinfo/{userId}")
-    public ResponseEntity<List<Details>> getAllDetailByUser(@PathVariable String userId) {
+    @GetMapping("/allinfo")
+    public ResponseEntity<List<Details>> getAllDetailByUser() {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(detailService.getAllDetails(userId));
+                .body(detailService.getAllDetails());
     }
 
    // Information Add By User ID
-    @PostMapping("/add/{id}")
-    public ResponseEntity<Details> addInfo(
-            @PathVariable String id,
-            @RequestBody Details info) {
+    @PostMapping("/add")
+    public ResponseEntity<Details> addInfo(@RequestBody Details info) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(detailService.addContent(id, info));
+                .body(detailService.addContent(info));
     }
 
     // Delete Details
-    @DeleteMapping("/remove/{userId}/{cId}")
+    @DeleteMapping("/remove/{cId}")
     public ResponseEntity<List<Details>> removeDelail(
-            @PathVariable String userId,
             @PathVariable String cId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(detailService.removeContent(userId, cId));
+                .body(detailService.removeContent(cId));
     }
 
     // UPDATE CONTENT
